@@ -1,4 +1,10 @@
-# hangole-blog
+# Hangole Blog
+
+## Project required
+```
+npm 6.12.0
+node v12.13.0
+```
 
 ## Project setup
 ```

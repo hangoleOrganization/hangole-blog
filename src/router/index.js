@@ -1,14 +1,19 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '@/views/Home.vue';
+import WritePost from '@/views/WritePost.vue';
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: '/',
-    name: 'home',
+    name: 'Home',
     component: Home
+  }, {
+    path: '/writePost',
+    name: 'WritePost',
+    component: WritePost
   }
 ];
 

@@ -17,10 +17,15 @@
             </v-img>
           </div>
         </v-col>
-        <v-col class="d-flex child-flex" cols="2" v-if="images.length < 8">
-          <div class="image-card d-flex" @click="addImage">
+        <v-col class="d-flex child-flex" cols="2">
+          <div class="image-card d-flex" @click="addImage" v-if="images.length < maxImageCount">
             <v-img class="image-card-add" aspect-ratio="1">
               <v-icon large v-text="'mdi-image-plus'" />
+            </v-img>
+          </div>
+          <div class="image-card else d-flex" v-else>
+            <v-img class="image-card-max" aspect-ratio="1">
+              You can upload up to 8 images
             </v-img>
           </div>
         </v-col>
@@ -38,7 +43,7 @@
         </v-btn>
       </v-row>
 
-      <input type="file" style="display: none;" ref="image" accept="image/*" @change="onFilePicked" />
+      <input multiple ref="image" style="display: none;" type="file" accept="image/*" @change="onFilePicked" />
     </v-form>
   </div>
 </template>
@@ -55,14 +60,12 @@ export default {
   data: () => ({
     title: '',
     contents: '',
-    images: []
+    images: [],
+    maxImageCount: 8
   }),
 
   methods: {
     post () {
-      window.console.log(this.title);
-      window.console.log(this.contents);
-
       let newPostKey = firebase.database().ref().child('posts').push().key;
 
       let postData = {
@@ -80,6 +83,7 @@ export default {
         if (error) {
           window.console.log(error);
         } else {
+          window.console.log('wrote post');
           this.$router.push('/');
         }
        });
@@ -97,22 +101,36 @@ export default {
     },
     onFilePicked (event) {
       const files = event.target.files;
-      if (files[0] !== undefined) {
-        let image = {};
-        image.name = files[0].name;
 
-        if (image.name.lastIndexOf('.') < 0) {
-          return;
+      let fileLength = files.length;
+
+      if (fileLength + this.images.length > this.maxImageCount) {
+        fileLength = this.maxImageCount - this.images.length;
+      }
+
+      for (let i = 0; i < fileLength; i++) {
+        let file = files[i];
+        if (file !== undefined) {
+          if (typeof file !== 'object') {
+            return;
+          }
+
+          let image = {};
+          image.name = file.name;
+  
+          if (!image.name || image.name.lastIndexOf('.') < 0) {
+            return;
+          }
+  
+          const fileReader = new FileReader();
+          fileReader.addEventListener('load', () => {
+            image.url = fileReader.result;
+            image.file = file;
+            this.images.push(image);
+          });
+  
+          fileReader.readAsDataURL(file);
         }
-
-        const fileReader = new FileReader();
-        fileReader.addEventListener('load', () => {
-          image.url = fileReader.result;
-          image.file = files[0];
-          this.images.push(image);
-        });
-
-        fileReader.readAsDataURL(files[0]);
       }
     }
   }
@@ -121,6 +139,7 @@ export default {
 
 <style>
 .write-post {
+  user-select: none;
 }
 
 .image-card {
@@ -131,13 +150,27 @@ export default {
   transition: all .3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-.image-card:hover {
+.image-card:hover,
+.image-card.else {
   opacity: 1;
+}
+
+.image-card.else {
+  cursor: default;
 }
 
 .image-card-add .v-responsive__content {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.image-card-max .v-responsive__content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+  font-size: 12px;
+  text-align: center;
 }
 </style>

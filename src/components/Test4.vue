@@ -28,7 +28,6 @@ export default {
       snapshot.forEach((childSnapshot) => {
         let childData = childSnapshot.val();
         this.posts.push(childData);
-        // window.console.log(this.posts);
       });
     });
   }

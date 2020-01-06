@@ -35,9 +35,6 @@ export default {
 
   methods: {
     signUp () {
-      window.console.log(this.email);
-      window.console.log(this.password);
-
       firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then((user) => {
         window.console.log(user);
 

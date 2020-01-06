@@ -35,9 +35,6 @@ export default {
 
   methods: {
     signIn () {
-      window.console.log(this.email);
-      window.console.log(this.password);
-
       firebase.auth().signInWithEmailAndPassword(this.email, this.password).then((response) => {
         window.console.log(response);
 

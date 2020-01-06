@@ -4,12 +4,15 @@
 ```
 npm 6.12.0
 node v12.13.0
-firebase configuration file
+Firebase configuration file
+Firebase authentication
+Firebase realtime database
+Firebase hosting
 ```
 
 ## Firebase Config
 ```
-// Firebase Config Example
+// Example
 // In /src/plugins/firebase/.config.js
 export default {
   apiKey: 'apiKey here',

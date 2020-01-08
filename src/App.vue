@@ -108,6 +108,12 @@ a {
   text-decoration: none !important;
 }
 
+.dialog {
+  min-width: 300px;
+  max-width: 500px;
+  border-radius: 0px !important;
+}
+
 .hidden {
   position: fixed;
   bottom: 0;
